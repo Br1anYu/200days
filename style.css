@@ -1,0 +1,996 @@
+/* ============================================================
+   200 Days ｜ 交往 200 天紀念網站
+   設計系統：日系奶油色 × 粉色點綴 × 金色光點
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. 設計 Token（顏色 / 字體 / 間距 / 陰影 / 圓角 / 動畫時間）
+   全部集中於 :root，方便日後修改整體風格
+------------------------------------------------------------ */
+:root {
+  /* 顏色：奶油色系為主，粉色與金色作為點綴，不使用大紅色 */
+  --color-bg: #faf6f1;              /* 主背景：奶油白 */
+  --color-bg-deep: #f3ebe0;         /* 較深奶油，用於分區漸層 */
+  --color-surface: #ffffff;         /* 卡片底色 */
+  --color-pink-soft: #f3dfdc;       /* 柔粉，大面積點綴 */
+  --color-pink: #dba7a6;            /* 主粉色，按鈕／強調 */
+  --color-pink-deep: #c98e8d;       /* 深粉，hover 狀態 */
+  --color-gold: #c9a876;            /* 金色，象徵光點與時間軸 */
+  --color-gold-soft: #e7d3ab;       /* 淺金，光暈用 */
+  --color-text: #4a3f3a;            /* 主文字：暖棕黑 */
+  --color-text-soft: #8a7a72;       /* 次要文字 */
+  --color-text-faint: #b3a89f;      /* 輔助文字 / 時間標籤 */
+  --color-line: #e7dcd0;            /* 分隔線 */
+
+  /* 字體：中文襯線（標題）／中文無襯線（內文）／英文襯線（數字裝飾） */
+  --font-display: "Noto Serif TC", "Cormorant Garamond", serif;
+  --font-body: "Noto Sans TC", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-number: "Cormorant Garamond", "Noto Serif TC", serif;
+
+  /* 間距尺度：使用 clamp() 讓留白隨視窗大小流動，不寫死像素 */
+  --space-xs: clamp(0.5rem, 1vw, 0.75rem);
+  --space-sm: clamp(1rem, 2vw, 1.5rem);
+  --space-md: clamp(2rem, 4vw, 3.5rem);
+  --space-lg: clamp(3.5rem, 7vw, 6rem);
+  --space-xl: clamp(5rem, 10vw, 9rem);
+
+  /* 圓角：統一使用大圓角營造精品質感 */
+  --radius-sm: 1rem;
+  --radius-md: 1.5rem;
+  --radius-lg: 2.5rem;
+
+  /* 柔和陰影：低對比、大範圍模糊 */
+  --shadow-soft: 0 1.5rem 3rem -1.5rem rgba(74, 63, 58, 0.25);
+  --shadow-card: 0 1rem 2.5rem -1rem rgba(74, 63, 58, 0.15);
+  --shadow-hover: 0 2rem 4rem -1.5rem rgba(201, 142, 141, 0.35);
+
+  /* 動畫時間／曲線：自然、不誇張 */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 0.3s;
+  --duration-mid: 0.6s;
+  --duration-slow: 1s;
+
+  /* 內容最大寬度，維持 Apple 官網般的舒適閱讀寬度 */
+  --content-width: min(72rem, 92vw);
+}
+
+/* ------------------------------------------------------------
+   2. Reset / 基礎設定
+------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth; /* 原生平滑捲動，配合 JS 的 easing 進一步優化 */
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-deep) 100%);
+  line-height: 1.8;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden; /* 避免裝飾元素造成水平捲動 */
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* 尊重使用者「減少動態效果」的系統設定 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 鍵盤可視焦點：確保無障礙瀏覽 */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* ------------------------------------------------------------
+   3. 共用元件：Section 標題 / 按鈕 / 漣漪
+------------------------------------------------------------ */
+.section-header {
+  max-width: var(--content-width);
+  margin: 0 auto var(--space-lg);
+  padding: 0 var(--space-sm);
+  text-align: center;
+}
+
+.section-header__eyebrow {
+  font-family: var(--font-number);
+  font-style: italic;
+  letter-spacing: 0.3em;
+  font-size: 0.8rem;
+  color: var(--color-pink-deep);
+  margin-bottom: var(--space-xs);
+}
+
+.section-header__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: var(--color-text);
+  letter-spacing: 0.05em;
+}
+
+.section-header__desc {
+  margin-top: var(--space-xs);
+  color: var(--color-text-soft);
+  font-size: 0.95rem;
+}
+
+/* 主要按鈕：圓角、柔和陰影、hover 微微浮起 */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.5rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  overflow: hidden; /* 讓漣漪效果不超出按鈕範圍 */
+  transition: transform var(--duration-fast) var(--ease-soft),
+    box-shadow var(--duration-fast) var(--ease-soft);
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, var(--color-pink) 0%, var(--color-pink-deep) 100%);
+  color: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.btn--primary:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* 漣漪效果容器：由 JS 動態插入 span.ripple-circle */
+.ripple {
+  position: relative;
+}
+
+.ripple-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  animation: ripple-expand 0.6s var(--ease-soft) forwards;
+  pointer-events: none;
+}
+
+@keyframes ripple-expand {
+  to {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------
+   4. 滾動進場動畫：Fade In + Slide Up
+   由 JS 透過 IntersectionObserver 加上 .is-visible
+------------------------------------------------------------ */
+.fade-up {
+  opacity: 0;
+  transform: translateY(2.5rem);
+  transition: opacity var(--duration-slow) var(--ease-soft),
+    transform var(--duration-slow) var(--ease-soft);
+}
+
+.fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------
+   5. 導覽列
+------------------------------------------------------------ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(250, 246, 241, 0);
+  backdrop-filter: blur(0px);
+  transition: background var(--duration-mid) var(--ease-soft),
+    backdrop-filter var(--duration-mid) var(--ease-soft),
+    box-shadow var(--duration-mid) var(--ease-soft);
+}
+
+/* 捲動後：由 JS 加上 .nav--scrolled，呈現毛玻璃效果 */
+.nav--scrolled {
+  background: rgba(250, 246, 241, 0.85);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0.5rem 1.5rem -1rem rgba(74, 63, 58, 0.15);
+}
+
+.nav__brand {
+  font-family: var(--font-number);
+  font-style: italic;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--color-pink-deep);
+}
+
+.nav__links {
+  display: none; /* 手機預設隱藏，平板以上顯示 */
+  gap: var(--space-md);
+}
+
+.nav__links a {
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text-soft);
+  position: relative;
+  padding-bottom: 0.25rem;
+  transition: color var(--duration-fast) var(--ease-soft);
+}
+
+/* 底線 hover 動畫：由左側緩緩展開 */
+.nav__links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-pink-deep);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-fast) var(--ease-soft);
+}
+
+.nav__links a:hover {
+  color: var(--color-pink-deep);
+}
+
+.nav__links a:hover::after {
+  transform: scaleX(1);
+}
+
+@media (min-width: 768px) {
+  .nav__links {
+    display: flex;
+  }
+}
+
+/* ------------------------------------------------------------
+   6. Hero Section
+------------------------------------------------------------ */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-xl) var(--space-sm);
+  overflow: hidden;
+  /* 柔和漸層背景：奶油到淺粉，營造溫馨氛圍 */
+  background: radial-gradient(120% 100% at 50% 0%, #fffdfb 0%, var(--color-bg) 45%, var(--color-pink-soft) 100%);
+}
+
+.hero__particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 單一光點／愛心粒子樣式，由 JS 動態建立多個 */
+.hero__particle {
+  position: absolute;
+  bottom: -5%;
+  opacity: 0;
+  color: var(--color-gold-soft);
+  animation: float-up linear infinite;
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-110vh) translateX(var(--drift, 2rem)) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 40rem;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-number);
+  font-style: italic;
+  letter-spacing: 0.3em;
+  font-size: 0.85rem;
+  color: var(--color-pink-deep);
+  margin-bottom: var(--space-sm);
+}
+
+.hero__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-display);
+  color: var(--color-text);
+}
+
+.hero__number {
+  font-family: var(--font-number);
+  font-weight: 500;
+  font-size: clamp(4rem, 14vw, 8rem);
+  line-height: 1;
+  background: linear-gradient(135deg, var(--color-pink-deep) 0%, var(--color-gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__title-text {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.hero__subtitle {
+  margin-top: var(--space-md);
+  color: var(--color-text-soft);
+  font-size: 1rem;
+  line-height: 2;
+}
+
+.hero__content .btn {
+  margin-top: var(--space-lg);
+}
+
+/* 向下捲動提示：細線緩緩拉伸 */
+.hero__scroll-hint {
+  position: absolute;
+  bottom: var(--space-md);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+.hero__scroll-line {
+  width: 1px;
+  height: 2.5rem;
+  background: linear-gradient(180deg, var(--color-pink-deep), transparent);
+  animation: scroll-pulse 2s var(--ease-soft) infinite;
+}
+
+@keyframes scroll-pulse {
+  0%,
+  100% {
+    transform: scaleY(0.6);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.hero__scroll-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--color-text-faint);
+}
+
+/* ------------------------------------------------------------
+   7. 我們的故事：時間軸
+------------------------------------------------------------ */
+.story {
+  padding: var(--space-xl) var(--space-sm);
+  position: relative; /* 讓背景光暈可以用 absolute 定位 */
+}
+
+/* 故事區塊背景：柔焦光暈，營造深度與溫度，避免畫面太單調 */
+.story__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.story__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.6;
+  animation: blob-breathe 14s var(--ease-soft) infinite;
+}
+
+/* 三個光斑用不同顏色、大小、位置，避免對稱感太工整 */
+.story__blob--1 {
+  width: 22rem;
+  height: 22rem;
+  top: -4rem;
+  left: -6rem;
+  background: var(--color-pink-soft);
+  animation-delay: 0s;
+}
+
+.story__blob--2 {
+  width: 16rem;
+  height: 16rem;
+  top: 40%;
+  right: -5rem;
+  background: var(--color-gold-soft);
+  animation-delay: 4s;
+}
+
+.story__blob--3 {
+  width: 18rem;
+  height: 18rem;
+  bottom: -5rem;
+  left: 30%;
+  background: var(--color-pink-soft);
+  animation-delay: 8s;
+}
+
+@keyframes blob-breathe {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(1.5rem, -1rem) scale(1.08);
+  }
+}
+
+/* 確保時間軸卡片在光暈之上 */
+.timeline {
+  position: relative;
+  z-index: 1;
+}
+
+.timeline {
+  position: relative;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* 連接時間軸的金色光線（SVG），手機版置於左側，桌機版置中 */
+.timeline__line {
+  position: absolute;
+  top: 0;
+  left: 1.4rem;
+  width: 4px;
+  height: 100%;
+  z-index: 0;
+}
+
+.timeline__line-track {
+  stroke: var(--color-line);
+  stroke-width: 2;
+}
+
+.timeline__line-progress {
+  stroke: var(--color-gold);
+  stroke-width: 2;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000; /* 初始隱藏，由 JS 依捲動進度點亮 */
+  transition: stroke-dashoffset 0.1s linear;
+}
+
+.timeline__item {
+  position: relative;
+  padding-left: 3.5rem;
+}
+
+.timeline__dot {
+  position: absolute;
+  left: 1.4rem;
+  top: 0.5rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 2px solid var(--color-gold);
+  z-index: 1;
+  box-shadow: 0 0 0 6px rgba(201, 168, 118, 0.12);
+}
+
+.timeline__card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--duration-mid) var(--ease-soft),
+    box-shadow var(--duration-mid) var(--ease-soft);
+}
+
+.timeline__card:hover {
+  transform: translateY(-0.5rem);
+  box-shadow: var(--shadow-hover);
+}
+
+.timeline__tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--color-pink-deep);
+  background: var(--color-pink-soft);
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  margin-bottom: var(--space-xs);
+}
+
+.timeline__title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.timeline__date {
+  display: block;
+  font-family: var(--font-number);
+  font-style: italic;
+  color: var(--color-text-faint);
+  font-size: 0.85rem;
+  margin-bottom: var(--space-sm);
+}
+
+.timeline__media {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--space-sm);
+  aspect-ratio: 16 / 10;
+}
+
+.timeline__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease-soft);
+}
+
+.timeline__card:hover .timeline__media img {
+  transform: scale(1.06); /* 圖片緩慢放大，呈現精品質感 */
+}
+
+.timeline__desc {
+  color: var(--color-text-soft);
+  font-size: 0.95rem;
+}
+
+/* 桌機版：時間軸卡片左右交錯排列，營造節奏感 */
+@media (min-width: 900px) {
+  .timeline__line {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .timeline__item {
+    width: calc(50% - var(--space-lg));
+    padding-left: 0;
+  }
+
+  .timeline__item--right,
+  .timeline__item:nth-child(even) {
+    align-self: flex-end;
+  }
+
+  .timeline__dot {
+    left: -3.05rem;
+  }
+
+  .timeline__item--right .timeline__dot,
+  .timeline__item:nth-child(even) .timeline__dot {
+    left: auto;
+    right: -3.05rem;
+  }
+}
+
+/* ------------------------------------------------------------
+   8. 相簿
+------------------------------------------------------------ */
+.album {
+  padding: var(--space-xl) var(--space-sm);
+  background: linear-gradient(180deg, transparent 0%, var(--color-pink-soft) 100%);
+}
+
+.album__grid {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+}
+
+@media (min-width: 700px) {
+  .album__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.album__card {
+  position: relative;
+  border: none;
+  padding: 0;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--duration-mid) var(--ease-soft),
+    box-shadow var(--duration-mid) var(--ease-soft);
+}
+
+.album__card:hover,
+.album__card:focus-visible {
+  transform: translateY(-0.4rem) scale(1.02);
+  box-shadow: var(--shadow-hover);
+}
+
+.album__card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease-soft);
+}
+
+.album__card:hover img {
+  transform: scale(1.1);
+}
+
+/* ------------------------------------------------------------
+   9. 燈箱（Lightbox）：點擊照片後放大顯示
+------------------------------------------------------------ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  background: rgba(74, 63, 58, 0.55);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--duration-mid) var(--ease-soft),
+    visibility var(--duration-mid) var(--ease-soft);
+}
+
+.lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox__figure {
+  max-width: min(50rem, 90vw);
+  max-height: 85vh;
+  margin: 0;
+  text-align: center;
+  transform: scale(0.92);
+  transition: transform var(--duration-mid) var(--ease-soft);
+}
+
+.lightbox.is-open .lightbox__figure {
+  transform: scale(1);
+}
+
+.lightbox__img {
+  max-width: 100%;
+  max-height: 75vh;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  object-fit: contain;
+}
+
+.lightbox__caption {
+  margin-top: var(--space-sm);
+  color: #fff;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.lightbox__close {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 2.75rem;
+  height: 2.75rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--duration-fast) var(--ease-soft),
+    transform var(--duration-fast) var(--ease-soft);
+}
+
+.lightbox__close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+/* ------------------------------------------------------------
+   10. 一起完成的事情：Checklist
+------------------------------------------------------------ */
+.checklist {
+  padding: var(--space-xl) var(--space-sm);
+}
+
+.checklist__list {
+  max-width: 38rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.checklist__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--duration-fast) var(--ease-soft),
+    box-shadow var(--duration-fast) var(--ease-soft);
+}
+
+.checklist__item:hover {
+  transform: translateX(0.4rem);
+  box-shadow: var(--shadow-hover);
+}
+
+.checklist__mark {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-pink) 0%, var(--color-gold) 100%);
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.checklist__mark--pending {
+  background: transparent;
+  border: 2px dashed var(--color-text-faint);
+  color: var(--color-text-faint);
+}
+
+.checklist__text {
+  color: var(--color-text);
+  font-size: 0.95rem;
+}
+
+.checklist__item--pending {
+  border: 1px dashed var(--color-line);
+  box-shadow: none;
+  background: transparent;
+}
+
+.checklist__item--pending .checklist__text {
+  color: var(--color-text-soft);
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------
+   11. 想對妳說：信件區塊
+------------------------------------------------------------ */
+.letter {
+  padding: var(--space-xl) var(--space-sm);
+  background: linear-gradient(180deg, var(--color-pink-soft) 0%, var(--color-bg) 100%);
+  display: flex;
+  justify-content: center;
+}
+
+.letter__envelope {
+  max-width: 38rem;
+  width: 100%;
+}
+
+.letter__paper {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-md);
+  box-shadow: var(--shadow-soft);
+  position: relative;
+}
+
+/* 紙張左上角的裝飾線，模擬信紙質感 */
+.letter__paper::before {
+  content: "";
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  width: 2.5rem;
+  height: 2px;
+  background: var(--color-gold);
+}
+
+.letter__greeting {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  margin-bottom: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.letter__body {
+  font-size: 1rem;
+  line-height: 2.2;
+  color: var(--color-text);
+  white-space: pre-line; /* 保留 JS 打字內容中的換行 */
+  min-height: 14rem; /* 預留高度，避免打字過程中版面跳動 */
+}
+
+/* 打字游標：由 JS 在打字完成前附加 .letter__cursor */
+.letter__cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--color-pink-deep);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: cursor-blink 0.9s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.letter__signature {
+  margin-top: var(--space-md);
+  text-align: right;
+  font-family: var(--font-number);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--color-pink-deep);
+  opacity: 0;
+  transform: translateY(0.6rem);
+  transition: opacity var(--duration-slow) var(--ease-soft),
+    transform var(--duration-slow) var(--ease-soft);
+}
+
+.letter__signature.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------
+   12. Footer
+------------------------------------------------------------ */
+.footer {
+  position: relative;
+  padding: var(--space-xl) var(--space-sm) var(--space-lg);
+  text-align: center;
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+
+.footer__line1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 500;
+}
+
+.footer__line2 {
+  font-family: var(--font-number);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--color-gold-soft);
+  margin-top: var(--space-xs);
+}
+
+.footer__meta {
+  margin-top: var(--space-md);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: rgba(250, 246, 241, 0.5);
+}
+
+.footer__top {
+  position: absolute;
+  right: var(--space-md);
+  bottom: var(--space-lg);
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(250, 246, 241, 0.3);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-bg);
+  font-size: 1.1rem;
+  transition: background var(--duration-fast) var(--ease-soft),
+    transform var(--duration-fast) var(--ease-soft);
+}
+
+.footer__top:hover {
+  background: rgba(250, 246, 241, 0.12);
+  transform: translateY(-0.3rem);
+}
+
+/* ------------------------------------------------------------
+   13. 小尺寸裝置微調
+------------------------------------------------------------ */
+@media (max-width: 480px) {
+  .hero__number {
+    font-size: clamp(3.2rem, 18vw, 5rem);
+  }
+
+  .footer__top {
+    right: var(--space-sm);
+  }
+}

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>我們的 200 天 ｜ 致最重要的妳</title>
+  <meta name="description" content="一份獻給我們交往 200 天的紀念網站" />
+
+  <!-- ====== 字體：中文襯線（標題）／中文無襯線（內文）／英文襯線（數字裝飾） ====== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ====================================================== -->
+  <!-- 頂部導覽列：滾動時淡入，提供章節快速跳轉                  -->
+  <!-- ====================================================== -->
+  <nav class="nav" id="nav" aria-label="主要導覽">
+    <span class="nav__brand">200 Days</span>
+    <ul class="nav__links">
+      <li><a href="#story">我們的故事</a></li>
+      <li><a href="#album">相簿</a></li>
+      <li><a href="#checklist">一起完成的事</a></li>
+      <li><a href="#letter">想對妳說</a></li>
+    </ul>
+  </nav>
+
+  <!-- ====================================================== -->
+  <!-- 1. Hero Section                                          -->
+  <!-- ====================================================== -->
+  <header class="hero" id="hero">
+    <!-- 背景漂浮光點／愛心由 JS 動態產生，容器先佔位 -->
+    <div class="hero__particles" id="heroParticles" aria-hidden="true"></div>
+
+    <div class="hero__content">
+      <p class="hero__eyebrow fade-up">致 全天下最可愛的寶包</p>
+      <h1 class="hero__title fade-up">
+        <span class="hero__number" data-count-to="200">0</span>
+        <span class="hero__title-text">我們在一起的第 200 天</span>
+      </h1>
+      <p class="hero__subtitle fade-up">
+        從相遇的那一天開始，每一天都因為有妳變得值得紀念。
+      </p>
+      <a href="#story" class="btn btn--primary fade-up ripple">
+        <span>開始探索我們的故事</span>
+      </a>
+    </div>
+
+    <!-- 向下捲動提示 -->
+    <div class="hero__scroll-hint" aria-hidden="true">
+      <span class="hero__scroll-line"></span>
+      <span class="hero__scroll-label">向下拉</span>
+    </div>
+  </header>
+
+  <!-- ====================================================== -->
+  <!-- 2. 我們的故事：時間軸                                     -->
+  <!-- ====================================================== -->
+  <section class="story" id="story">
+    <!-- 背景柔光裝飾，純視覺用，不影響螢幕閱讀器 -->
+    <div class="story__bg" aria-hidden="true">
+      <span class="story__blob story__blob--1"></span>
+      <span class="story__blob story__blob--2"></span>
+      <span class="story__blob story__blob--3"></span>
+    </div>
+    <div class="section-header">
+      <p class="section-header__eyebrow fade-up">OUR STORY</p>
+      <h2 class="section-header__title fade-up">我們的故事</h2>
+      <p class="section-header__desc fade-up">
+        每一張相片代表的回憶，都是這段故事裡最閃亮的光點。
+      </p>
+    </div>
+
+    <!-- 時間軸主體：左側為連接所有事件的金色光線（由 SVG 繪製並隨捲動點亮） -->
+    <div class="timeline" id="timeline">
+      <svg class="timeline__line" id="timelineLine" viewBox="0 0 4 1000" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="2" y1="0" x2="2" y2="1000" class="timeline__line-track" />
+        <line x1="2" y1="0" x2="2" y2="1000" class="timeline__line-progress" id="timelineProgress" />
+      </svg>
+
+      <!-- 第一次見面 -->
+      <article class="timeline__item">
+        <div class="timeline__dot" aria-hidden="true"></div>
+        <div class="timeline__card fade-up">
+          <span class="timeline__tag">我們的電影</span>
+          <h3 class="timeline__title">那天第一次一起看電影</h3>
+          <time class="timeline__date">2026 . 02 . 01</time>
+          <div class="timeline__media">
+            <img
+              src="images/first_movie.JPG"
+              alt="第一次見面的場景照片"
+              loading="lazy"
+            />
+          </div>
+          <p class="timeline__desc">
+            《陽光女子合唱團》是我們一起看的第一部電影。和妳一起隨著劇情歡笑、落淚，
+            那份感動至今仍深深留在我的心裡，也成了我最特別的一段回憶。
+            
+          </p>
+        </div>
+      </article>
+
+      <!-- 第一次約會 -->
+      <article class="timeline__item timeline__item--right">
+        <div class="timeline__dot" aria-hidden="true"></div>
+        <div class="timeline__card fade-up">
+          <span class="timeline__tag">我們的旅行</span>
+          <h3 class="timeline__title">我們的第一個情人節</h3>
+          <time class="timeline__date">2025 . 02 . 14</time>
+          <div class="timeline__media">
+            <img
+              src="images/first_date.JPG"
+              alt="第一次約會的照片"
+              loading="lazy"
+            />
+          </div>
+          <p class="timeline__desc">
+            那天天氣正好，我們一起去北投走走，
+            只是輕鬆地逛了幾個景點，也去了可愛的咖啡廳。原本只是再普通不過的行程，但因為有妳在身邊，
+            走過的每一個地方都多了一點溫度，也變得特別有趣。
+          </p>
+        </div>
+      </article>
+
+      <!-- 第一次旅行 -->
+      <article class="timeline__item">
+        <div class="timeline__dot" aria-hidden="true"></div>
+        <div class="timeline__card fade-up">
+          <span class="timeline__tag">我們的遠距</span>
+          <h3 class="timeline__title">那天第一次送我回台中</h3>
+          <time class="timeline__date">2026 . 03 . 22</time>
+          <div class="timeline__media">
+            <img
+              src="images/first_back.JPG"
+              alt="第一次旅行的照片"
+              loading="lazy"
+            />
+          </div>
+          <p class="timeline__desc">
+            雖然妳總說台中和台北不算遠距離，我一個月也會回來好幾次，
+            但每次道別時，妳還是會露出依依不捨的模樣，就像一隻捨不得主人離開的小動物。每次看到妳那樣，
+            我的心也跟著揪了一下，只希望下次見面的日子能快點到來。
+          </p>
+        </div>
+      </article>
+
+      <!-- 第一次看球 -->
+      <article class="timeline__item timeline__item--right">
+        <div class="timeline__dot" aria-hidden="true"></div>
+        <div class="timeline__card fade-up">
+          <span class="timeline__tag">我們的樂天</span>
+          <h3 class="timeline__title">第一次一起看球賽</h3>
+          <time class="timeline__date">2026 . 04 . 25</time>
+          <div class="timeline__media">
+            <img
+              src="/images/first_matches.JPG"
+              alt="第一次一起看球賽的照片"
+              loading="lazy"
+            />
+          </div>
+          <p class="timeline__desc">
+            那天是妳第一次帶我去球場，還記得妳笑著說要盡地主之誼，
+            買了好多好吃的給我。雖然因為下雨比賽一度暫停，最後樂天也輸了球，
+            但那一天的點點滴滴，卻成了我心中最特別、最深刻的一段回憶。
+          </p>
+        </div>
+      </article>
+
+      <!-- 第一次過生日 -->
+      <article class="timeline__item">
+        <div class="timeline__dot" aria-hidden="true"></div>
+        <div class="timeline__card fade-up">
+          <span class="timeline__tag">我們的外縣市之旅</span>
+          <h3 class="timeline__title">那天我們第一次去台南</h3>
+          <time class="timeline__date">2026 . 05 . 01</time>
+          <div class="timeline__media">
+            <img
+              src="/images/first_trip.JPG"
+              alt="第一次一起去台南的照片"
+              loading="lazy"
+            />
+          </div>
+          <p class="timeline__desc">
+            那是我們第一次單獨一起去外縣市旅行。我們走訪了好多景點，也買了球票，一起到亞太球場看了三天的棒球，還吃遍了許多台南美食。那些食物本來就很好吃，但因為有妳陪在身邊，
+            每一口都變得更加美味，也讓這趟旅程成為我最難忘的回憶。
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ====================================================== -->
+  <!-- 3. 相簿                                                  -->
+  <!-- ====================================================== -->
+  <section class="album" id="album">
+    <div class="section-header">
+      <p class="section-header__eyebrow fade-up">MEMORIES</p>
+      <h2 class="section-header__title fade-up">我們的相簿</h2>
+      <p class="section-header__desc fade-up">
+        點擊照片，重新回到那個瞬間。
+      </p>
+    </div>
+
+    <div class="album__grid" id="albumGrid">
+      <button class="album__card fade-up" data-full="/images/line6.JPG" data-caption="火車緩緩前進，而窗外的景色不斷更迭，我們一路有說有笑，彷彿連旅程都因為彼此而變得更短了。">
+        <img src="/images/line6.jpg" alt="火車緩緩前進，而窗外的景色不斷更迭，我們一路有說有笑，彷彿連旅程都因為彼此而變得更短了。" loading="lazy" />
+      </button>
+
+      <button class="album__card fade-up" data-full="/images/line2.jpg" data-caption="在那片湛藍的水光裡，魚群靜靜游過，而我眼中的風景始終是站在身旁的妳。">
+        <img src="/images/line2.jpg" alt="在那片湛藍的水光裡，魚群靜靜游過，而我眼中的風景始終是站在身旁的妳。" loading="lazy" />
+      </button>
+
+      <button class="album__card fade-up" data-full="/images/line3.jpg" data-caption="我們交往的那一天，一起到海邊的餐廳吃飯。海風輕輕吹過，也悄悄吹開了屬於我們故事的第一頁。">
+        <img src="/images/line3.jpg" alt="我們交往的那一天，一起到海邊的餐廳吃飯。海風輕輕吹過，也悄悄吹開了屬於我們故事的第一頁。" loading="lazy" />
+      </button>
+
+      <button class="album__card fade-up" data-full="/images/line4.jpg" data-caption="還是去水族館的照片，因為我覺得好看">
+        <img src="/images/line4.jpg" alt="還是去水族館的照片，因為我覺得好看" loading="lazy" />
+      </button>
+
+      <button class="album__card fade-up" data-full="/images/line1.jpg" data-caption="一起坐在海邊的鞦韆上，眼裡映著彼此的笑容。原來，只要和妳待在一起，再平凡的畫面，都會變成最美好的回憶。喝的那杯咖啡">
+        <img src="/images/line1.jpg" alt="一起坐在海邊的鞦韆上，眼裡映著彼此的笑容。原來，只要和妳待在一起，再平凡的畫面，都會變成最美好的回憶。喝的那杯咖啡" loading="lazy" />
+      </button>
+
+      <button class="album__card fade-up" data-full="/images/line5.jpg" data-caption="去RC家之前在宏匯的照片">
+        <img src="/images/line5.jpg" alt="去RC家之前在宏匯的照片" loading="lazy" />
+      </button>
+    </div>
+  </section>
+
+  <!-- 相簿燈箱（Lightbox）：點擊照片後放大顯示 -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox__close" id="lightboxClose" aria-label="關閉放大檢視">&times;</button>
+    <figure class="lightbox__figure">
+      <img src="" alt="" id="lightboxImg" class="lightbox__img" />
+      <figcaption class="lightbox__caption" id="lightboxCaption"></figcaption>
+    </figure>
+  </div>
+
+  <!-- ====================================================== -->
+  <!-- 4. 一起完成的事情：Checklist                              -->
+  <!-- ====================================================== -->
+  <section class="checklist" id="checklist">
+    <div class="section-header">
+      <p class="section-header__eyebrow fade-up">TOGETHER</p>
+      <h2 class="section-header__title fade-up">我們一起完成的事</h2>
+      <p class="section-header__desc fade-up">
+        清單會越來越長，因為我們才剛開始而已。
+      </p>
+    </div>
+
+    <ul class="checklist__list">
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">收到100則IG訊息</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">打電話到早上五點</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">喝醉且在喜歡的人旁邊</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">通宵完之後去別人家睡整天</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">正式的告白</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">去別人家聽到媽媽說妹妹像馬(?)</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">打麻將有人全程坐我腿上</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">一直跑去別人家蹭飯</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">去咖啡廳玩猜logo</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">被別人家貓貓狂蹭</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">在咖啡廳拼拼圖</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">帶回宿舍過夜</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">收到耳機禮物</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">和愛人一起看煙火</span>
+      </li>
+      <li class="checklist__item fade-up">
+        <span class="checklist__mark" aria-hidden="true">✓</span>
+        <span class="checklist__text">一起去台南玩</span>
+      </li>
+      <li class="checklist__item checklist__item--pending fade-up">
+        <span class="checklist__mark checklist__mark--pending" aria-hidden="true">○</span>
+        <span class="checklist__text">聖地牙哥遠距戀情</span>
+      </li>
+      <li class="checklist__item checklist__item--pending fade-up">
+        <span class="checklist__mark checklist__mark--pending" aria-hidden="true">○</span>
+        <span class="checklist__text">幫對方慶生</span>
+      </li>
+      <li class="checklist__item checklist__item--pending fade-up">
+        <span class="checklist__mark checklist__mark--pending" aria-hidden="true">○</span>
+        <span class="checklist__text">再跨一次年</span>
+      </li>
+      <li class="checklist__item checklist__item--pending fade-up">
+        <span class="checklist__mark checklist__mark--pending" aria-hidden="true">○</span>
+        <span class="checklist__text">接下來要一起完成的，還有好多好多...</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ====================================================== -->
+  <!-- 5. 想對妳說：信件 + 打字動畫                              -->
+  <!-- ====================================================== -->
+  <section class="letter" id="letter">
+    <div class="letter__envelope fade-up">
+      <div class="section-header">
+        <p class="section-header__eyebrow">FOR YOU</p>
+        <h2 class="section-header__title">想對妳說</h2>
+      </div>
+
+      <div class="letter__paper">
+        <p class="letter__greeting">游采采200天快樂 ❤️</p>
+        <p class="letter__body" id="letterTyped"></p>
+        <p class="letter__signature" id="letterSignature">
+          我愛妳，200天快樂。❤️
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================== -->
+  <!-- 6. Footer                                                -->
+  <!-- ====================================================== -->
+  <footer class="footer">
+    <p class="footer__line1">Thanks for being in my life.</p>
+    <p class="footer__line2">Love you forever.</p>
+    <p class="footer__meta">200 Days &amp; Counting · Made with love</p>
+
+    <!-- 回到頂部 -->
+    <button class="footer__top" id="backToTop" aria-label="回到頁面頂部">↑</button>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
